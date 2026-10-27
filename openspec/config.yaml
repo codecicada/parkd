@@ -1,0 +1,23 @@
+schema: spec-driven
+
+context: |
+  parkd is a Chrome extension (Manifest V3) that saves a window's open tabs to a local
+  list, closes them, and restores them later.
+  Core loop, in priority order: save all tabs in one click, restore one tab / one group /
+  everything, import and export through a plain-text form.
+  Simplicity is the product: every new screen, setting or permission must justify itself
+  against the core loop.
+  Local only: no account, no sync, no network calls, no remote code, no telemetry.
+  Inspired by the classic save-all-tabs workflow; never copy another extension's code, UI,
+  wording or assets.
+  Import should accept the common one-tab-per-line `URL | title` text format so users can
+  migrate from other tab savers.
+
+rules:
+  proposal:
+    - Include a "Non-goals" section
+    - Name every Chrome permission the change adds and why
+  specs:
+    - Terse requirements; let Given/When/Then scenarios carry the detail
+  tasks:
+    - Atomic tasks with file paths and a verification step each
