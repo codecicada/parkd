@@ -137,6 +137,19 @@ button {
   background: var(--hover);
 }
 
+.tab.dragging {
+  opacity: 0.5;
+}
+
+/* The drop line: above the row a dragged tab would land before, or below the last row. */
+.tab.drop-before {
+  box-shadow: inset 0 2px 0 var(--accent);
+}
+
+.tabs.drop-end {
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
 .tab-link {
   flex: 1;
   min-width: 0;

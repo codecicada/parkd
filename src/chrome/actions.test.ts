@@ -160,3 +160,44 @@ describe("importText", () => {
     expect(isAction({ type: "importText" })).toBe(false);
   });
 });
+
+describe("moveTab", () => {
+  const move = (fromGroupId: string, tabId: string, toGroupId: string, toIndex: number) =>
+    runAction({ type: "moveTab", fromGroupId, tabId, toGroupId, toIndex }, 1);
+
+  it("stores the new order, and restoring follows it", async () => {
+    await seed(group("g", 1, ["a", "b", "c"]));
+
+    await move("g", "c", "g", 0);
+    expect(await parked()).toEqual(["g:c,a,b"]);
+
+    await runAction({ type: "restoreGroup", groupId: "g" }, 1);
+    expect(openUrls()).toEqual(["https://c.test/", "https://a.test/", "https://b.test/"]);
+  });
+
+  it("moves a tab into another group and drops the emptied one", async () => {
+    await seed(group("g", 1, ["a"]), group("h", 2, ["b"]));
+
+    await move("g", "a", "h", 1);
+
+    expect(await parked()).toEqual(["h:b,a"]);
+    expect(openUrls()).toEqual([]);
+  });
+
+  it("writes nothing for a move in place", async () => {
+    await seed(group("g", 1, ["a", "b"]));
+    fake.failNextWrite();
+
+    await expect(move("g", "a", "g", 0)).resolves.toBeUndefined();
+    expect(await parked()).toEqual(["g:a,b"]);
+  });
+
+  it("rejects a move message with a missing id or a bad index", () => {
+    const ok = { type: "moveTab", fromGroupId: "g", tabId: "a", toGroupId: "h", toIndex: 0 };
+    expect(isAction(ok)).toBe(true);
+    expect(isAction({ ...ok, tabId: undefined })).toBe(false);
+    expect(isAction({ ...ok, toIndex: -1 })).toBe(false);
+    expect(isAction({ ...ok, toIndex: 1.5 })).toBe(false);
+    expect(isAction({ ...ok, toIndex: "0" })).toBe(false);
+  });
+});
