@@ -12,7 +12,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return false;
   }
   runAction(message, windowId).then(
-    () => sendResponse({ ok: true }),
+    (result) => sendResponse({ ok: true, result }),
     (error) => {
       console.error("parkd: action failed", error);
       sendResponse({ ok: false });
