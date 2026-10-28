@@ -54,11 +54,6 @@ pick the `dist/` folder. After a rebuild, click the reload icon on the parkd car
 
 `npm test` runs the unit tests, `npm run typecheck` the type checks.
 
-## Status
-
-Early. Work is specified first with [OpenSpec](https://github.com/Fission-AI/OpenSpec)
-in [openspec/](openspec/), then built.
-
 ## License
 
 [MIT](LICENSE)
