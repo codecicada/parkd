@@ -12,6 +12,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         list: resolve(root, "list.html"),
+        transfer: resolve(root, "transfer.html"),
         background: resolve(root, "src/background.ts"),
       },
       output: {

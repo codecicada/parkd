@@ -11,6 +11,22 @@ and lets you restore them when you need them again. Nothing more.
 - **Restore** — reopen one tab, one group, or everything.
 - **Import / export** — plain text in a simple form, so your list is never locked in.
 
+## Import and export
+
+Open **Import / export** from the list page. Export shows every parked tab as text you can
+copy; Import takes the same text back. One tab per line, a blank line between groups:
+
+```text
+https://example.com/ | Example
+https://example.org/docs | Docs
+
+https://example.net/
+```
+
+A line without ` | title` uses the URL as its title. Only `http`, `https`, `file` and `ftp`
+links are imported; other lines are skipped and counted. Imported groups are dated at the
+time of import.
+
 ## What it does not do
 
 No account, no cloud sync, no analytics, no ads. Your tabs stay in your browser.

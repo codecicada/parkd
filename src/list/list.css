@@ -195,3 +195,67 @@ button {
     padding-right: 16px;
   }
 }
+
+.nav-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.transfer {
+  max-width: 760px;
+}
+
+.format-hint {
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+code {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 13px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.panel-head h2 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.panel textarea {
+  width: 100%;
+  resize: vertical;
+  font: 13px/1.5 ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.note {
+  color: var(--muted);
+  margin: 8px 0 0;
+  min-height: 1.45em;
+}
+
+.note[hidden] {
+  display: none;
+}

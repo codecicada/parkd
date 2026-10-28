@@ -1,4 +1,5 @@
-import { findGroup, removeGroup, removeTab, sortedGroups } from "../core/groups";
+import { addGroup, findGroup, removeGroup, removeTab, sortedGroups } from "../core/groups";
+import { parseImport } from "../core/transfer";
 import type { ParkdState, ParkedTab } from "../core/types";
 import { readState, serialize, writeState } from "./store";
 
@@ -7,7 +8,14 @@ export type Action =
   | { type: "restoreGroup"; groupId: string }
   | { type: "restoreAll" }
   | { type: "deleteTab"; groupId: string; tabId: string }
-  | { type: "deleteGroup"; groupId: string };
+  | { type: "deleteGroup"; groupId: string }
+  | { type: "importText"; text: string };
+
+export interface ImportReport {
+  tabs: number;
+  groups: number;
+  skipped: number;
+}
 
 const ACTION_TYPES = new Set<string>([
   "restoreTab",
@@ -15,22 +23,64 @@ const ACTION_TYPES = new Set<string>([
   "restoreAll",
   "deleteTab",
   "deleteGroup",
+  "importText",
 ]);
 
 export function isAction(value: unknown): value is Action {
-  return !!value && ACTION_TYPES.has((value as Action).type);
+  if (!value || !ACTION_TYPES.has((value as Action).type)) return false;
+  const action = value as Action;
+  return action.type !== "importText" || typeof action.text === "string";
 }
 
-/** Applies one list-page action. `windowId` is the window the list page is in. */
-export function runAction(action: Action, windowId: number): Promise<void> {
+/**
+ * Applies one action from an extension page. `windowId` is the window that page is in.
+ * Resolves to the import report for `importText`, and to nothing otherwise.
+ */
+export function runAction(
+  action: Action,
+  windowId: number,
+  now = Date.now(),
+): Promise<ImportReport | undefined> {
   return serialize(async () => {
     const state = await readState();
+    if (action.type === "importText") {
+      const { next, report } = importText(state, action.text, now);
+      if (next !== state) await writeState(next);
+      return report;
+    }
     const next = await apply(state, action, windowId);
     if (next !== state) await writeState(next);
+    return undefined;
   });
 }
 
-async function apply(state: ParkdState, action: Action, windowId: number): Promise<ParkdState> {
+/**
+ * Adds one group per block. Each group is 1 ms older than the one before it, so the
+ * blocks keep the text's order on the newest-first list and sit above older groups.
+ */
+function importText(state: ParkdState, text: string, now: number) {
+  const { blocks, skipped } = parseImport(text);
+  let next = state;
+  blocks.forEach((tabs, index) => {
+    next = addGroup(next, {
+      id: crypto.randomUUID(),
+      createdAt: now - index,
+      tabs: tabs.map((tab) => ({ id: crypto.randomUUID(), ...tab })),
+    });
+  });
+  const report: ImportReport = {
+    tabs: blocks.reduce((n, tabs) => n + tabs.length, 0),
+    groups: blocks.length,
+    skipped,
+  };
+  return { next, report };
+}
+
+async function apply(
+  state: ParkdState,
+  action: Exclude<Action, { type: "importText" }>,
+  windowId: number,
+): Promise<ParkdState> {
   switch (action.type) {
     case "restoreTab": {
       const tab = findGroup(state, action.groupId)?.tabs.find((t) => t.id === action.tabId);

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>parkd · Import / export</title>
+    <link rel="icon" href="/icons/48.png" />
+    <link rel="stylesheet" href="/src/list/list.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <h1>parkd</h1>
+      <p class="summary">Import / export</p>
+      <a class="nav-link" href="list.html">Back to list</a>
+    </header>
+    <main class="transfer">
+      <p class="format-hint">
+        One tab per line: <code>URL | title</code>. A blank line starts a new group.
+      </p>
+
+      <section class="panel" aria-labelledby="export-title">
+        <div class="panel-head">
+          <h2 id="export-title">Export</h2>
+          <button type="button" class="action" id="copy">Copy</button>
+        </div>
+        <p class="note" id="export-empty" hidden>Nothing is parked.</p>
+        <textarea id="export-text" readonly rows="10" spellcheck="false" aria-label="Exported tabs"></textarea>
+        <p class="note" id="copy-status" role="status"></p>
+      </section>
+
+      <section class="panel" aria-labelledby="import-title">
+        <div class="panel-head">
+          <h2 id="import-title">Import</h2>
+          <button type="button" class="action" id="import">Import</button>
+        </div>
+        <textarea
+          id="import-text"
+          rows="10"
+          spellcheck="false"
+          placeholder="https://example.com/ | Example"
+          aria-label="Tabs to import"
+        ></textarea>
+        <p class="note" id="import-status" role="status"></p>
+      </section>
+    </main>
+    <script type="module" src="/src/transfer/transfer.ts"></script>
+  </body>
+</html>

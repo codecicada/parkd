@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { installFakeChrome, type FakeChrome } from "../../test/fake-chrome";
 import type { Group, ParkdState } from "../core/types";
+import { sortedGroups } from "../core/groups";
 import { isAction, runAction } from "./actions";
 import { readState, writeState } from "./store";
 
@@ -106,5 +107,56 @@ describe("isAction", () => {
     expect(isAction({ type: "restoreAll" })).toBe(true);
     expect(isAction({ type: "eval" })).toBe(false);
     expect(isAction(null)).toBe(false);
+  });
+});
+
+describe("importText", () => {
+  it("adds one group per block, above older groups and in the text's order", async () => {
+    await seed(group("existing", 1, ["x"]));
+
+    const report = await runAction(
+      { type: "importText", text: "https://a.test/ | A\n\nhttps://b.test/ | B\nhttps://c.test/" },
+      1,
+      5000,
+    );
+
+    expect(report).toEqual({ tabs: 3, groups: 2, skipped: 0 });
+    const { groups } = await readState();
+    expect(groups).toHaveLength(3);
+    const order = sortedGroups({ version: 1, groups }).map((g) => g.tabs.map((t) => t.title).join(","));
+    expect(order).toEqual(["A", "B,https://c.test/", "x"]);
+    expect(openUrls()).toEqual([]);
+  });
+
+  it("keeps duplicates", async () => {
+    await seed(group("g", 1, ["a"]));
+
+    await runAction({ type: "importText", text: "https://a.test/" }, 1);
+
+    const urls = (await readState()).groups.flatMap((g) => g.tabs.map((t) => t.url));
+    expect(urls).toEqual(["https://a.test/", "https://a.test/"]);
+  });
+
+  it("stores nothing when no line is valid", async () => {
+    await seed(group("g", 1, ["a"]));
+
+    const report = await runAction({ type: "importText", text: "javascript:alert(1)\nnope" }, 1);
+
+    expect(report).toEqual({ tabs: 0, groups: 0, skipped: 2 });
+    expect(await parked()).toEqual(["g:a"]);
+  });
+
+  it("stores nothing when the write fails", async () => {
+    await seed(group("g", 1, ["a"]));
+    fake.failNextWrite();
+
+    await expect(runAction({ type: "importText", text: "https://b.test/" }, 1)).rejects.toThrow();
+
+    expect(await parked()).toEqual(["g:a"]);
+  });
+
+  it("rejects an import message without text", () => {
+    expect(isAction({ type: "importText", text: "x" })).toBe(true);
+    expect(isAction({ type: "importText" })).toBe(false);
   });
 });
