@@ -35,7 +35,7 @@
 
 ## 5. CI and docs
 
-- [ ] 5.1 Add `.github/workflows/ci.yml` running `npm ci`, `npm run typecheck`, `npm test`, `npm run build` on `pull_request` and `push` to `main`. Verify: workflow runs green on the PR.
+- [x] 5.1 Add `.github/workflows/ci.yml` running `npm ci`, `npm run typecheck`, `npm test`, `npm run build` on `pull_request` and `push` to `main`. Verify: workflow runs green on the PR.
 - [x] 5.2 Update `README.md` with "Build and load locally" (`npm ci`, `npm run build`, Load unpacked `dist/`) and the two permissions with reasons. Verify: following the steps from a fresh clone loads the extension.
 
 ## 6. Integration check
