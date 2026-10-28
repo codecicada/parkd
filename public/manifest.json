@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "parkd",
+  "version": "0.1.0",
+  "description": "Park your tabs. Come back later.",
+  "minimum_chrome_version": "116",
+  "permissions": ["tabs", "storage"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Park this window",
+    "default_icon": {
+      "16": "icons/16.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  }
+}

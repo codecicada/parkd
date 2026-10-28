@@ -15,10 +15,33 @@ and lets you restore them when you need them again. Nothing more.
 
 No account, no cloud sync, no analytics, no ads. Your tabs stay in your browser.
 
+## Permissions
+
+| Permission | Why |
+|---|---|
+| `tabs` | Read the URL and title of the tabs you park, and close and reopen them. |
+| `storage` | Keep your parked tabs in the browser's local extension storage. |
+
+No host permissions. parkd never reads page content and never makes a network request.
+
+## Build and load locally
+
+Needs Node 24 (see `.nvmrc`).
+
+```sh
+npm ci
+npm run build
+```
+
+Then open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and
+pick the `dist/` folder. After a rebuild, click the reload icon on the parkd card.
+
+`npm test` runs the unit tests, `npm run typecheck` the type checks.
+
 ## Status
 
-Early design. Work is specified first with [OpenSpec](https://github.com/Fission-AI/OpenSpec)
-in [openspec/](openspec/) before any code is written.
+Early. Work is specified first with [OpenSpec](https://github.com/Fission-AI/OpenSpec)
+in [openspec/](openspec/), then built.
 
 ## License
 
