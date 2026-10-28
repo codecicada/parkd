@@ -6,7 +6,7 @@ Motivation: see proposal.md. Behavior: see specs/tab-parking/spec.md. Each decis
 
 **Context.** An MV3 extension needs a background service worker, a list page and a `manifest.json`. TypeScript must compile to what Chrome loads.
 
-**Decision.** Vite builds two inputs: `src/list/list.html` and `src/background.ts` (emitted as `background.js`, ES module). `public/manifest.json` is copied to `dist/` unchanged. Chrome loads `dist/`. TypeScript `strict`, `@types/chrome`, Node version pinned in `.nvmrc`, npm with a committed lockfile.
+**Decision.** Vite builds two inputs: `list.html` at the repo root (emitted as `dist/list.html`) and `src/background.ts` (emitted as `background.js`, ES module). The modulepreload polyfill is off; Chrome supports it natively. `public/manifest.json` is copied to `dist/` unchanged. Chrome loads `dist/`. TypeScript `strict`, `@types/chrome`, Node version pinned in `.nvmrc`, npm with a committed lockfile.
 
 **Consequences.** The manifest stays a hand-written file a reviewer can read. No hot reload: after `npm run build`, reload the extension in `chrome://extensions`.
 
