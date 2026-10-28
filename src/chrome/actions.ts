@@ -1,4 +1,4 @@
-import { addGroup, findGroup, removeGroup, removeTab, sortedGroups } from "../core/groups";
+import { addGroup, findGroup, moveTab, removeGroup, removeTab, sortedGroups } from "../core/groups";
 import { parseImport } from "../core/transfer";
 import type { ParkdState, ParkedTab } from "../core/types";
 import { readState, serialize, writeState } from "./store";
@@ -9,6 +9,7 @@ export type Action =
   | { type: "restoreAll" }
   | { type: "deleteTab"; groupId: string; tabId: string }
   | { type: "deleteGroup"; groupId: string }
+  | { type: "moveTab"; fromGroupId: string; tabId: string; toGroupId: string; toIndex: number }
   | { type: "importText"; text: string };
 
 export interface ImportReport {
@@ -23,13 +24,22 @@ const ACTION_TYPES = new Set<string>([
   "restoreAll",
   "deleteTab",
   "deleteGroup",
+  "moveTab",
   "importText",
 ]);
 
 export function isAction(value: unknown): value is Action {
   if (!value || !ACTION_TYPES.has((value as Action).type)) return false;
   const action = value as Action;
-  return action.type !== "importText" || typeof action.text === "string";
+  if (action.type === "importText") return typeof action.text === "string";
+  if (action.type === "moveTab") {
+    return (
+      [action.fromGroupId, action.tabId, action.toGroupId].every((id) => typeof id === "string") &&
+      Number.isInteger(action.toIndex) &&
+      action.toIndex >= 0
+    );
+  }
+  return true;
 }
 
 /**
@@ -106,6 +116,8 @@ async function apply(
       return removeTab(state, action.groupId, action.tabId);
     case "deleteGroup":
       return removeGroup(state, action.groupId);
+    case "moveTab":
+      return moveTab(state, action.fromGroupId, action.tabId, action.toGroupId, action.toIndex);
   }
 }
 

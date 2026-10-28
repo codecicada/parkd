@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { addGroup, buildGroup, clearAll, removeGroup, removeTab, sortedGroups } from "./groups";
-import { emptyState, type Group } from "./types";
+import {
+  addGroup,
+  buildGroup,
+  clearAll,
+  keyboardTarget,
+  moveTab,
+  removeGroup,
+  removeTab,
+  sortedGroups,
+} from "./groups";
+import { emptyState, type Group, type ParkdState } from "./types";
 
 const counter = () => {
   let n = 0;
@@ -65,6 +74,67 @@ describe("removeTab", () => {
     let state = addGroup(emptyState(), group("g1", 1, ["a"]));
     state = addGroup(state, group("g2", 2, ["a"]));
     expect(removeTab(state, "g1", "a").groups.map((g) => g.id)).toEqual(["g2"]);
+  });
+});
+
+describe("moveTab", () => {
+  const ids = (state: ParkdState) =>
+    state.groups.map((g) => `${g.id}:${g.tabs.map((t) => t.id).join(",")}`);
+
+  it("moves a tab within its group", () => {
+    const state = addGroup(emptyState(), group("g", 1, ["a", "b", "c"]));
+    expect(ids(moveTab(state, "g", "c", "g", 0))).toEqual(["g:c,a,b"]);
+    expect(ids(moveTab(state, "g", "a", "g", 2))).toEqual(["g:b,c,a"]);
+  });
+
+  it("moves a tab into another group and keeps dates and group order", () => {
+    let state = addGroup(emptyState(), group("g1", 1, ["a", "b"]));
+    state = addGroup(state, group("g2", 2, ["c"]));
+    const next = moveTab(state, "g1", "b", "g2", 1);
+    expect(ids(next)).toEqual(["g1:a", "g2:c,b"]);
+    expect(next.groups.map((g) => g.createdAt)).toEqual([1, 2]);
+  });
+
+  it("removes a group whose last tab moves out", () => {
+    let state = addGroup(emptyState(), group("g1", 1, ["a"]));
+    state = addGroup(state, group("g2", 2, ["b"]));
+    expect(ids(moveTab(state, "g1", "a", "g2", 0))).toEqual(["g2:a,b"]);
+  });
+
+  it("returns the same state for a move in place", () => {
+    const state = addGroup(emptyState(), group("g", 1, ["a", "b"]));
+    expect(moveTab(state, "g", "b", "g", 1)).toBe(state);
+  });
+
+  it("returns the same state for unknown ids", () => {
+    const state = addGroup(emptyState(), group("g", 1, ["a", "b"]));
+    expect(moveTab(state, "gone", "a", "g", 0)).toBe(state);
+    expect(moveTab(state, "g", "gone", "g", 0)).toBe(state);
+    expect(moveTab(state, "g", "a", "gone", 0)).toBe(state);
+  });
+
+  it("clamps an out-of-range index", () => {
+    const state = addGroup(emptyState(), group("g", 1, ["a", "b", "c"]));
+    expect(ids(moveTab(state, "g", "a", "g", 99))).toEqual(["g:b,c,a"]);
+  });
+});
+
+describe("keyboardTarget", () => {
+  const groups = [group("upper", 2, ["a", "b"]), group("lower", 1, ["c", "d"])];
+
+  it("moves one place within a group", () => {
+    expect(keyboardTarget(groups, "upper", "b", "up")).toEqual({ toGroupId: "upper", toIndex: 0 });
+    expect(keyboardTarget(groups, "lower", "c", "down")).toEqual({ toGroupId: "lower", toIndex: 1 });
+  });
+
+  it("crosses a group edge", () => {
+    expect(keyboardTarget(groups, "lower", "c", "up")).toEqual({ toGroupId: "upper", toIndex: 2 });
+    expect(keyboardTarget(groups, "upper", "b", "down")).toEqual({ toGroupId: "lower", toIndex: 0 });
+  });
+
+  it("stops at the top and bottom of the list", () => {
+    expect(keyboardTarget(groups, "upper", "a", "up")).toBeUndefined();
+    expect(keyboardTarget(groups, "lower", "d", "down")).toBeUndefined();
   });
 });
 
