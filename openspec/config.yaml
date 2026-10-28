@@ -15,9 +15,14 @@ context: |
 
 rules:
   proposal:
-    - Include a "Non-goals" section
+    - Keep proposals under 150 words
+    - Always include a "Non-goals" section
+    - Lead with a 3-bullet TL;DR
     - Name every Chrome permission the change adds and why
+  design:
+    - "ADR format only: Context, Decision, Consequences, Alternatives. No tutorials."
   specs:
     - Terse requirements; let Given/When/Then scenarios carry the detail
   tasks:
-    - Atomic tasks with file paths and a verification step each
+    - Atomic tasks, 2-5 minutes each, with file paths and verification steps
+    - Include acceptance criteria per task

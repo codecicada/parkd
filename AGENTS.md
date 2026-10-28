@@ -25,3 +25,11 @@ restores them later. Read [README.md](README.md) for the product in one page.
 | [openspec/specs/](openspec/specs/) | What parkd does today, as requirements |
 | [openspec/changes/](openspec/changes/) | Proposed and in-flight changes |
 | `.claude/` | OpenSpec commands and skills for Claude Code |
+
+<!-- openspec-steward:begin -->
+## [OpenSpec change flow](https://github.com/codecicada/openspec-steward/blob/master/docs/change-flow.md)
+
+From `/start-change` to `/stop-change`: explore -> propose -> apply -> open PR
+-> verified green -> archive -> verify the apply -> merge when a human asks.
+Artifacts follow `openspec/config.yaml`; this repository's own approval rules also bind.
+<!-- openspec-steward:end -->
