@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="280" viewBox="0 0 440 280">
+  <rect width="440" height="280" fill="#f7f7f5"/>
+  <g transform="translate(48 76)">
+    <rect x="4" y="4" width="120" height="120" rx="26" fill="#266354"/>
+    <rect x="22" y="35" width="84" height="12" rx="6" fill="#ffd666"/>
+    <rect x="22" y="58" width="84" height="12" rx="6" fill="#ffffff"/>
+    <rect x="22" y="81" width="84" height="12" rx="6" fill="#ffffff"/>
+  </g>
+  <text x="204" y="146" font-family="Noto Sans, sans-serif" font-weight="700" font-size="60" fill="#1d2321">parkd</text>
+  <text x="206" y="182" font-family="Noto Sans, sans-serif" font-size="19" fill="#66706c">Park your tabs.</text>
+  <text x="206" y="206" font-family="Noto Sans, sans-serif" font-size="19" fill="#66706c">Come back later.</text>
+</svg>

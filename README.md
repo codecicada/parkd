@@ -40,6 +40,7 @@ No account, no cloud sync, no analytics, no ads. Your tabs stay in your browser.
 | `storage` | Keep your parked tabs in the browser's local extension storage. |
 
 No host permissions. parkd never reads page content and never makes a network request.
+See the [privacy policy](PRIVACY.md).
 
 ## Build and load locally
 
@@ -54,6 +55,7 @@ Then open `chrome://extensions`, turn on **Developer mode**, click **Load unpack
 pick the `dist/` folder. After a rebuild, click the reload icon on the parkd card.
 
 `npm test` runs the unit tests, `npm run typecheck` the type checks.
+`npm run package` builds and writes `parkd-<version>.zip`, the file the Chrome Web Store takes.
 
 ## License
 
