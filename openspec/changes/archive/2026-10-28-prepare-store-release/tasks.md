@@ -4,7 +4,7 @@
 
 - [x] 1.1 Write `scripts/package.ts`: walk `dist/`, sort paths, fail on `.map` or dotfiles, write `parkd-<version>.zip` using `crc32` and `deflateRawSync` from `node:zlib` and a fixed 1980-01-01 timestamp. Add `"package": "npm run build && node scripts/package.ts"`; add `scripts` to `tsconfig.node.json`. Accept: `npm run package` writes `parkd-0.1.0.zip`; `unzip -l` shows `manifest.json`, `background.js`, `list.html`, `transfer.html` at the root and no `.map`; `npm run typecheck` passes.
 - [x] 1.2 Check determinism and git hygiene. Accept: two runs give the same `sha256sum`; `git status --porcelain` does not list the zip; `unzip -t` reports no errors.
-- [ ] 1.3 Replace `npm run build` with `npm run package` in `.github/workflows/ci.yml`. Accept: the workflow file names `npm run package`; CI is green on the pull request.
+- [x] 1.3 Replace `npm run build` with `npm run package` in `.github/workflows/ci.yml`. Accept: the workflow file names `npm run package`; CI is green on the pull request.
 - [x] 1.4 Add a "Package for the store" line to the README build section. Accept: README shows `npm run package` and the zip name.
 
 ## 2. Version check (`test/release.test.ts`, `CHANGELOG.md`)
