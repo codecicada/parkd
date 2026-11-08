@@ -5,6 +5,11 @@ Park your tabs. Come back later.
 parkd is a Chrome extension that saves every open tab in a window to a list, closes them,
 and lets you restore them when you need them again. Nothing more.
 
+## Install
+
+Get parkd from the
+[Chrome Web Store](https://chromewebstore.google.com/detail/parkd/flhndmklpddhnhlnoepaaelgmkoejeme).
+
 ## What it does
 
 - **Save** — one click parks all tabs of the current window as a dated group.
